@@ -1,0 +1,26 @@
+﻿services:
+  app-a:
+    build: .
+    container_name: calificaciones1-a
+    restart: unless-stopped
+    environment:
+      INSTANCE_NAME: app-a
+
+  app-b:
+    build: .
+    container_name: calificaciones1-b
+    restart: unless-stopped
+    environment:
+      INSTANCE_NAME: app-b
+
+  nginx-lb:
+    image: nginx:1.27-alpine
+    container_name: calificaciones1-nginx
+    restart: unless-stopped
+    depends_on:
+      - app-a
+      - app-b
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
